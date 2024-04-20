@@ -1,7 +1,4 @@
-# This example requires the 'message_content' intent.
-
 import discord
-from discord.ext import tasks
 from dotenv import load_dotenv
 import os
 
@@ -17,22 +14,23 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
     print(f"We have logged in as {client.user}")
+    for guild in client.guilds:
+        for forum in guild.forums:
+            for thread in forum.threads:
+                messages = [message async for message in thread.history()]
+                for message in messages:
+                    print(message.content)
 
 
-async def get_forums(guild):
-    for channel in guild.forums:
-        print(channel)
-
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith("$hello"):
-        await message.channel.send("Hello!")
-        for guild in client.guilds:
-            await get_forums(guild)
-
+# @client.event
+# async def on_message(message):
+#     if message.author == client.user:
+#         return
+#
+#     if message.content.startswith("$hello"):
+#         await message.channel.send("Hello!")
+#         for guild in client.guilds:
+#             await get_forums(guild)
+#
 
 client.run(key)
