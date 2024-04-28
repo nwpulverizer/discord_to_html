@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import ForwardRef, Optional, List
 import markdown
+import os
 
 
 Post = ForwardRef("Post")
@@ -8,12 +9,13 @@ templates_path = Path("/home/nathan/Documents/boot.dev/discord_to_html/templates
 
 
 class Reply:
-    def __init__(self, content: str, username: str, parent: Post, timestamp):
+    def __init__(self, content: str, username: str, parent: Post, timestamp, id: int):
         self.content = content
         self.username = username
         self.timestamp = timestamp
         self.parent = parent
         self.template = templates_path / "replycard.html"
+        self.id = id
 
     def to_html(self):
         with open(self.template, "r") as f:
@@ -32,12 +34,14 @@ class Post:
         title: str,
         username: str,
         timestamp,
+        id: int,
         replies: List[Reply] = [],
     ):
         self.replies = replies
         self.title: str = title
         self.poster: str = username
         self.timestamp = timestamp
+        self.id = id
         self.thread_template = templates_path / "thread.html"
         self.post_card_template = templates_path / "threadcard.html"
 
@@ -67,14 +71,18 @@ class Post:
 
 
 class Forum:
-    def __init__(self, posts: List[Post] = [], title: Optional[str] = None):
+    def __init__(self, id: int, posts: List[Post] = [], title: Optional[str] = None):
+        self.id = id
         self.posts = posts
         self.title = title
-        self.template = templates_path / "channel.html"
+        self.forum_template = templates_path / "forum.html"
+        self.forum_card_template = templates_path / "forumcard.html"
 
     def to_html(self):
-        with open(self.template, "r") as f:
-            html = f.read()
+        if self.title is None:
+            raise ValueError("Title must not be None")
+        with open(self.forum_template, "r") as f:
+            forum_html = f.read()
         all_posts = ""
         if self.posts is not []:
             for post in sorted(self.posts, key=lambda x: x.timestamp):
@@ -82,11 +90,21 @@ class Forum:
                 all_posts += post.thread_card_html
         else:
             print(f"No Posts. in {self.title}")
-        self.html = html.replace("{{Channel name}}", self.title).replace(
+        self.forum_html = forum_html.replace("{{Channel name}}", self.title).replace(
             "{{Threads}}", all_posts
         )
+        with open(self.forum_card_template, "r") as f:
+            forum_card_html = f.read()
+        self.forum_card_html = forum_card_html.replace(
+            "{{forum-name}}", self.title
+        ).replace("{{forum page}}", f"/{self.title}{self.id}")
 
 
 class Guild:
-    def __init__(self, forums: List[Forum] = []):
+    def __init__(self, id: int, forums: List[Forum] = []):
+        self.id = id
         self.forums = forums
+
+    def to_html(self):
+        for forum in self.forums:
+            forum.to_html()

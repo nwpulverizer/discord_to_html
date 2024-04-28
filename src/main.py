@@ -15,35 +15,29 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
     print(f"We have logged in as {client.user}")
+    guilds = []
     for guild in client.guilds:
-        this_guild = Guild()
+        this_guild = Guild(guild.id)
+        print(this_guild.id)
         for forum in guild.forums:
-            this_forum = Forum(
-                title=forum.name,
-            )
+            this_forum = Forum(title=forum.name, id=forum.id)
             for thread in forum.threads:
-                # I don't really know what starter message is. It's not the
-                # Thing you put in when you create your thread
                 messages = [message async for message in thread.history()]
-                this_post = Post(thread.name, str(thread.owner), thread.created_at)
+                this_post = Post(
+                    thread.name, str(thread.owner), thread.created_at, thread.id
+                )
                 this_forum.posts.append(this_post)
                 for message in messages:
                     reply = Reply(
-                        message.content, message.author, this_post, message.created_at
+                        message.content,
+                        message.author,
+                        this_post,
+                        message.created_at,
+                        message.id,
                     )
                     this_post.replies.append(reply)
-            this_forum.to_html()
+        this_guild.forums.append(this_forum)
+        guilds.append(this_guild)
 
-
-# @client.event
-# async def on_message(message):
-#     if message.author == client.user:
-#         return
-#
-#     if message.content.startswith("$hello"):
-#         await message.channel.send("Hello!")
-#         for guild in client.guilds:
-#             await get_forums(guild)
-#
 
 client.run(key)
