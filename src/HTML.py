@@ -108,3 +108,46 @@ class Guild:
     def to_html(self):
         for forum in self.forums:
             forum.to_html()
+        # TODO: create channel index
+
+    def write_forums(self):
+        pass
+
+
+public_path = Path("/home/nathanp/Documents/boot.dev/discord_html/public/")
+
+
+# TODO: I should take the file creation logic out of here
+# this function should ONLY create the directory structure.
+# file creation should happen as a method for each class so that I can make the directory structure
+# and then write to it. How I have it now, I still need to make the links to indivudal posts in the forums page
+# (replace {thread link} in template or whatever) but I have no guarantee that the file is there.
+def make_dir_structure(public_path: Path, guild: Guild):
+    guild_path = public_path / str(guild.id)
+    os.mkdir(guild_path)
+    for forum in guild.forums:
+        # make the forums folder
+        if forum.title is not None:
+            forum_path = guild_path / forum.title
+            os.mkdir(forum_path)
+        else:
+            raise ValueError("Forum needs a title to be written.")
+
+        # write the index.html to the folder for the forum
+        with open(forum_path / "index.html", "w") as f:
+            f.write(forum.forum_html)
+        # make the posts folder for the forum
+        posts_path = forum_path / "Posts"
+        os.mkdir(posts_path)
+        # write the posts to the folder
+        for post in forum.posts:
+            post_path = posts_path / f"{post.title}-{post.id}.html"
+            with open(post_path, "w") as f:
+                try:
+                    f.write(post.thread_html)
+                except ValueError:
+                    raise ValueError(
+                        f"post {post.title} does not have html generated yet."
+                    )
+
+    # TODO: make folder structure. Do I do that here? Another function?
