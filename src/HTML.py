@@ -123,6 +123,15 @@ public_path = Path("/home/nathanp/Documents/boot.dev/discord_html/public/")
 # and then write to it. How I have it now, I still need to make the links to indivudal posts in the forums page
 # (replace {thread link} in template or whatever) but I have no guarantee that the file is there.
 def make_dir_structure(public_path: Path, guild: Guild):
+    # what is required to make the dir structure? any info
+    # at all about the guild?
+    # I do need a name if I am doing this for many guilds or ID.
+    # If I am naming the forum path I need the forum names
+    # IF I am not naming the forum path the same as the forum title,
+    # then I do not need names, but I guess I will need some way to
+    # put the corresponding forums in the correct dir.
+    # ie which one is /forum1 which is /forum2 if I name them generically like
+    # that.
     guild_path = public_path / str(guild.id)
     os.mkdir(guild_path)
     for forum in guild.forums:
