@@ -1,4 +1,5 @@
 from pathlib import Path
+from re import L
 from typing import ForwardRef, Optional, List
 import markdown
 import os
@@ -65,8 +66,7 @@ class Post:
             card_html.replace("{{post-title}}", self.title)
             .replace("{{Username}}", str(self.poster))
             .replace("{{timestamp}}", self.timestamp.strftime("%c"))
-            # TODO: Replace {{thread page}} with correct href in template.
-            # must decide naming for threads.
+            .replace("{{thread page}}", f"Posts/{self.title}-{self.id}.html")
         )
 
 
@@ -97,7 +97,7 @@ class Forum:
             forum_card_html = f.read()
         self.forum_card_html = forum_card_html.replace(
             "{{forum-name}}", self.title
-        ).replace("{{forum page}}", f"/{self.title}{self.id}")
+        ).replace("{{forum page}}", f"/{self.title}/")
 
 
 class Guild:
@@ -160,3 +160,32 @@ def make_dir_structure(public_path: Path, guild: Guild):
                     )
 
     # TODO: make folder structure. Do I do that here? Another function?
+
+
+# QUESTION: is it worth pulling this into another function?
+# now I am repeating the same for loops again as in the make_dir_structure
+def error_if_dir_not_exist(dir: Path):
+    if not os.path.isdir(dir):
+        raise OSError(f"The directory {dir} has not been created")
+
+
+def write_files(public_path: Path, guild: Guild):
+    guild_path = public_path / str(guild.id)
+    error_if_dir_not_exist(guild_path)
+    for forum in guild.forums:
+        forum_path = guild_path / forum.title
+        error_if_dir_not_exist(forum_path)
+        with open(forum_path / "index.html", "w") as f:
+            f.write(forum.forum_html)
+        post_path = forum_path / "Posts"
+        if not os.path.isdir(post_path):
+            for post in forum.posts:
+                error_if_dir_not_exist(post_path)
+                post_path = post_path / f"{post.title}-{post.id}.html"
+                with open(post_path, "w") as f:
+                    try:
+                        f.write(post.thread_html)
+                    except ValueError:
+                        raise ValueError(
+                            f"{post.title} in {forum.title} does not have html generated yet."
+                        )
