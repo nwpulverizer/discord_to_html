@@ -1,8 +1,11 @@
 import discord
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 from HTML import Reply, Post, Forum, Guild
+from io_handlers import make_dir_structure, write_files
 
+public_path = Path("../public/").resolve()
 load_dotenv()
 key = os.getenv("BOT_KEY")
 
@@ -18,16 +21,20 @@ async def on_ready():
     guilds = []
     for guild in client.guilds:
         this_guild = Guild(guild.id)
-        print(this_guild.id)
         for forum in guild.forums:
             this_forum = Forum(title=forum.name, id=forum.id)
             for thread in forum.threads:
-                messages = [message async for message in thread.history()]
                 this_post = Post(
-                    thread.name, str(thread.owner), thread.created_at, thread.id
+                    thread.name,
+                    str(thread.owner),
+                    thread.created_at,
+                    thread.id,
+                    this_forum.title,
+                    [],
                 )
-                this_forum.posts.append(this_post)
+                messages = [message async for message in thread.history()]
                 for message in messages:
+
                     reply = Reply(
                         message.content,
                         message.author,
@@ -36,8 +43,16 @@ async def on_ready():
                         message.id,
                     )
                     this_post.replies.append(reply)
+                    print(f"adding {reply.content} to post {this_post.title}")
+                for i in this_post.replies:
+                    print(f"{i.content} is in post {this_post.title}")
+                this_forum.posts.append(this_post)
         this_guild.forums.append(this_forum)
         guilds.append(this_guild)
+    for guild in guilds:
+        guild.to_html()
+        make_dir_structure(public_path, guild)
+        write_files(public_path, guild)
 
 
 client.run(key)
