@@ -43,9 +43,6 @@ async def on_ready():
                         message.id,
                     )
                     this_post.replies.append(reply)
-                    print(f"adding {reply.content} to post {this_post.title}")
-                for i in this_post.replies:
-                    print(f"{i.content} is in post {this_post.title}")
                 this_forum.posts.append(this_post)
         this_guild.forums.append(this_forum)
         guilds.append(this_guild)

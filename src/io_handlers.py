@@ -54,14 +54,14 @@ def write_files(public_path: Path, guild: Guild):
     with open(guild_path / "index.html", "w") as f:
         f.write(guild.html)
     for forum in guild.forums:
-        forum_path = guild_path / urllib.parse.quote_plus(forum.title)
+        forum_path = guild_path / urllib.parse.quote_plus(forum.title.replace(" ","-"))
         error_if_dir_not_exist(forum_path)
         with open(forum_path / "index.html", "w") as f:
             f.write(forum.forum_html)
-        post_path = forum_path / "Posts"
+        post_path = forum_path / "Posts/"
         error_if_dir_not_exist(post_path)
         for post in forum.posts:
-            this_post_path = post_path / f"{post.title}-{post.id}.html"
+            this_post_path = post_path / f"{post.title.replace(" ", "-")}-{post.id}.html"
             with open(this_post_path, "w") as f:
                 try:
                     f.write(post.thread_html)

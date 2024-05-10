@@ -48,7 +48,6 @@ class Post:
         self.channel = channel
         self.thread_template = templates_path / "thread.html"
         self.post_card_template = templates_path / "threadcard.html"
-        self.title = self.title.replace(" ", "-")
 
     # How can I make sure these are sorted by time?
     def to_html(self):
@@ -68,14 +67,14 @@ class Post:
             .replace("{{Thread replies}}", all_replies)
             .replace("{{Channel name}}", self.channel)
         )
-        encoded_file_name = urllib.parse.quote_plus(f"{self.title}-{self.id}.html")
+        encoded_file_name = urllib.parse.quote_plus(f"{self.title.replace(" ", "-")}-{self.id}.html")
         self.thread_card_html = (
             card_html.replace("{{post-title}}", self.title)
             .replace("{{Username}}", str(self.poster))
             .replace("{{timestamp}}", self.timestamp.strftime("%c"))
             .replace(
                 "{{thread page}}",
-                urllib.parse.quote_plus(f"Posts/{self.title}-{self.id}.html"),
+              f"/{self.channel}/" + "Posts/" + encoded_file_name
             )
         )
 
@@ -108,7 +107,7 @@ class Forum:
         self.forum_card_html = forum_card_html.replace(
             "{{forum-name}}", self.title
         ).replace(
-            "{{forum page}}", urllib.parse.quote_plus(f"/{self.title}/index.html")
+            "{{forum page}}", urllib.parse.quote_plus(f"./{self.title.replace(" ", "-")}/index.html")
         )
 
 
