@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 2. Create a bot account and get your bot token. See [discord.py docs](https://discordpy.readthedocs.io/en/stable/discord.html) for details.
 
-3. Write your bot token into a .env file in the src/ directory in the repo under the variable BOT_TOKEN.
+3. Write your bot token into a .env file in the src/ directory in the repo under the variable BOT_KEY.
 
 4. Invite the bot to your server. Refer to the documentation linked above. It will need the bot scope and Read Message History and Read Messages/View Channels permissions.
 
