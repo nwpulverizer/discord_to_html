@@ -35,7 +35,11 @@ The point of this bot is to allow the content of help forums to be searchable on
 but there is no way to search all the help being given behind discord's walls. This project aims to fix this.
 
 # Roadmap 
+In no particular order, here are some things that I should improve. 
+
  - [ ] Add reaction count to posts
  -  [ ] Show image attatchments 
 -  [ ] Add sort by date or reaction count
--  [ ] Improve styling for posts  
+-  [ ] Improve styling for posts
+-  [ ] Add ability to update forum instead of just fully rewriting everytime.
+-  [ ] Instead of running based on whenever the bot is turned on, create bot commands 
