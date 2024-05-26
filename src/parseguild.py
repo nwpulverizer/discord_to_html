@@ -1,6 +1,7 @@
 import shutil
 from pathlib import Path
-from typing import List, datetime, Tuple
+from typing import List, Tuple
+from datetime import datetime
 
 import discord
 import markdown
@@ -132,7 +133,7 @@ def create_reply_item(
     """
     timestamp = reply.created_at
     reply_item = (
-        template_text.replace("{{Timestampe}}", str(reply.created_at))
+        template_text.replace("{{Timestamp}}", str(reply.created_at))
         .replace("{{User}}", "user" + str(hash(reply.author)))
         .replace("{{Content}}", markdown.markdown(reply.content))
     )
@@ -154,7 +155,7 @@ def write_post(
     pass the template_text as to not keep hitting disk for the same template.
     """
     sorted_replies_by_date = sorted(reply_list, key=lambda x: x[1])
-    reply_only = [i for i in sorted_replies_by_date[0]]
+    reply_only = [i[0] for i in sorted_replies_by_date]
 
     post_file_path = write_path.joinpath(f"{post.id}.html")
     file_text = (
