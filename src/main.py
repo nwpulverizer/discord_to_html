@@ -29,8 +29,11 @@ template_path = Path(args.template).resolve()
 load_dotenv()
 key = os.getenv("BOT_KEY")
 
-intents = discord.Intents.default()
+intents = discord.Intents.none()
 intents.message_content = True
+intents.messages = True
+intents.guilds = True
+
 
 client = discord.Client(intents=intents)
 
