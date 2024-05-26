@@ -33,3 +33,9 @@ python server.py -d ./public/public-{guild_id}/
 
 The point of this bot is to allow the content of help forums to be searchable on the internet. Discord is great for quick responses and fostering community,
 but there is no way to search all the help being given behind discord's walls. This project aims to fix this.
+
+# Roadmap 
+ - [ ] Add reaction count to posts
+ -  [ ] Show image attatchments 
+-  [ ] Add sort by date or reaction count
+-  [ ] Improve styling for posts  
