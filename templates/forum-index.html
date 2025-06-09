@@ -4,21 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{Forum Title}}</title>
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.xz.style/serve/inter.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
   </head>
   <body>
     <header>
       <a href="{{Guild Link}}">Return to server index</a>
       <h1>{{Forum Title}}</h1>
     </header>
-    <div>
+    <div class="container">
       <ul>
-        {{Posts}}
+        {{Posts}} <!-- Each item here will be generated from post-list-item.html -->
       </ul>
     </div>
   </body>

@@ -78,11 +78,31 @@ def create_post_list_item(post: discord.Thread, template_text: str) -> str:
     Eventually, this will be appended to the forum-index.html file to replace the {{Posts}}
     placeholder in the template.
     """
+    # Calculate reply count, ensuring it's not negative
+    reply_count = max(0, post.message_count - 1)
+    replies_text = f"{reply_count} repl{'y' if reply_count == 1 else 'ies'}"
+
+    owner_name = "Unknown User"
+    if post.owner: # post.owner can be None if the user left or is inaccessible
+        owner_name = post.owner.name
+    elif post.owner_id: # Fallback to ID if name is not available directly
+        owner_name = f"User ID: {post.owner_id}"
+
+    initial_post_reaction_text = "Reactions: N/A"
+    # Ensure starter_message is available and has reactions
+    if hasattr(post, 'starter_message') and post.starter_message and post.starter_message.reactions:
+        total_initial_reactions = 0
+        for reaction in post.starter_message.reactions:
+            total_initial_reactions += reaction.count
+        initial_post_reaction_text = f"{total_initial_reactions} reaction{'s' if total_initial_reactions != 1 else ''}"
+
     list_item = (
         template_text.replace("{{Post Link}}", f"./Posts/{post.id}.html")
         .replace("{{Post Title}}", post.name)
-        .replace("{{User}}", "user" + str(hash(post.owner)))
+        .replace("{{User}}", owner_name)
         .replace("{{Timestamp}}", str(post.created_at))
+        .replace("{{ReplyCount}}", replies_text)
+        .replace("{{InitialPostReactionCount}}", initial_post_reaction_text) # New placeholder
     )
     return list_item
 
@@ -132,12 +152,36 @@ def create_reply_item(
     Timestamp also return for sorting.
     """
     timestamp = reply.created_at
+    avatar_url = reply.author.avatar.url if reply.author.avatar else "path/to/default-avatar.png"
+    user_name = reply.author.name
+
+    # Convert main content to HTML
+    html_content = markdown.markdown(reply.content)
+
+    # Process attachments
+    attachments_html = ""
+    for attachment in reply.attachments:
+        if attachment.content_type and attachment.content_type.startswith('image/'):
+            attachments_html += f'<div class="attachment-image-container"><img src="{attachment.url}" alt="{attachment.filename or "Attached Image"}" class="attached-image" style="max-width: 100%; height: auto; border-radius: 5px; margin-top: 10px;" /></div>'
+
+    # Append attachments HTML to the main content
+    full_content = html_content + attachments_html
+
+    # Calculate total reactions
+    total_reactions = 0
+    if reply.reactions: # Ensure there are reactions to process
+        for reaction in reply.reactions:
+            total_reactions += reaction.count
+
+    reaction_text = f"{total_reactions} reaction{'s' if total_reactions != 1 else ''}"
+
     reply_item = (
         template_text.replace("{{Timestamp}}", str(reply.created_at))
-        .replace("{{User}}", "user" + str(hash(reply.author)))
-        .replace("{{Content}}", markdown.markdown(reply.content))
+        .replace("{{UserName}}", user_name)
+        .replace("{{AvatarURL}}", avatar_url)
+        .replace("{{Content}}", full_content)
+        .replace("{{ReactionCount}}", reaction_text)  # New placeholder
     )
-
     return reply_item, timestamp
 
 
@@ -157,12 +201,22 @@ def write_post(
     sorted_replies_by_date = sorted(reply_list, key=lambda x: x[1])
     reply_only = [i[0] for i in sorted_replies_by_date]
 
+    guild_name = forum.guild.name
+    # Path from post.html (in Posts/ directory) to forum index (in parent directory)
+    forum_link_breadcrumb = "../index.html"
+    # Path from post.html (in Posts/ directory) to guild index (two levels up)
+    guild_link_breadcrumb = "../../index.html"
+
     post_file_path = write_path.joinpath(f"{post.id}.html")
     file_text = (
-        template_text.replace("{{Forum Link}}", "../index.html")
+        template_text
+        .replace("{{Forum Link}}", forum_link_breadcrumb) # Existing, used for "return to forum"
         .replace("{{Forum Title}}", forum.name)
         .replace("{{Post Title}}", post.name)
         .replace("{{Replies}}", "".join(reply_only))
+        .replace("{{GuildName}}", guild_name) # New
+        .replace("{{GuildLinkBreadcrumb}}", guild_link_breadcrumb) # New
+        .replace("{{ForumLinkBreadcrumb}}", forum_link_breadcrumb) # New, or reuse {{Forum Link}}
     )
     with open(post_file_path, "w") as f:
         f.write(file_text)

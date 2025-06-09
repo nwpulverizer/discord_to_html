@@ -1,14 +1,9 @@
-<!-- 
-This is a card for an indivudal post preview. It 
-will be placed in the channel.html eventually
--->
-<li>
-  <div class="post-list-item">
-    <div class="card-title">
-      <a href="{{Post Link}}">
-        <h3>{{Post Title}}</h3>
-      </a>
+<div class="forum-list-item">
+    <h2><a href="{{Post Link}}">{{Post Title}}</a></h2>
+    <div class="post-info">
+        <span>Created by: {{User}}</span>
+        <span>On: {{Timestamp}}</span>
+        <span>Replies: {{ReplyCount}}</span>
+        <span>{{InitialPostReactionCount}}</span> <!-- Display initial post reactions -->
     </div>
-    <div class="card-info">{{User}} {{Timestamp}}</div>
-  </div>
-</li>
+</div>

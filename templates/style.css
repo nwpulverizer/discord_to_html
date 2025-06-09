@@ -1,15 +1,209 @@
-.forum-card {
+/* General styles */
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+header a {
+  color: #fff;
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Guild index page */
+.guild-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.guild-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  flex: 1 1 calc(33.333% - 40px); /* Three cards per row */
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* Forum index page */
+.forum-list-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.forum-list-item h2 a {
+  color: #333;
+}
+
+.forum-list-item .post-info {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Post page */
+.post-header {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.reply {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.reply .reply-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reply .reply-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.reply .reply-user {
+  font-weight: bold;
+}
+
+.reply .reply-timestamp {
+  font-size: 0.85em;
+  color: #777;
+  margin-left: auto;
+}
+
+.reply .reply-content {
+  margin-top: 10px;
+}
+
+/* Footer (optional - if you add one) */
+footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 30px;
+  background-color: #333;
+  color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+  }
+
+  .guild-card {
+    flex: 1 1 calc(50% - 40px); /* Two cards per row on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .guild-card {
+    flex: 1 1 100%; /* One card per row on very small screens */
+  }
+}
+
+/* Styles from the original style.css to be integrated or replaced */
+.forum-card { /* This was in the original, deciding if/how to merge */
   margin: 1%;
   border-style: solid;
-  border-width: 0.1vw;
-  border-radius: 1vw;
+  border-width: 1px; /* Changed from 0.1vw for consistency */
+  border-radius: 8px; /* Changed from 1vw for consistency */
   text-align: center;
+  padding: 10px; /* Added padding */
+  background-color: #f9f9f9; /* Added background */
 }
-.threads-container {
+
+.threads-container { /* This was in the original */
   display: flex;
-  flex-flow: column wrap;
-  justify-content: space-evenly;
+  flex-flow: column nowrap; /* Changed from wrap to nowrap for a single column list */
+  gap: 10px; /* Added gap for spacing between items */
 }
-h1 {
-  text-align: center;
+
+/* Making sure h1 in header is white */
+header h1 {
+    color: #fff;
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+  padding: 8px 15px;
+  margin-bottom: 20px;
+  list-style: none;
+  background-color: #e9ecef; /* Light grey background */
+  border-radius: 4px;
+}
+.breadcrumb-item {
+  display: inline-block;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+  padding: 0 5px;
+  color: #6c757d; /* Separator color */
+  content: "/";
+}
+.breadcrumb-item a {
+  color: #007bff; /* Link color */
+  text-decoration: none;
+}
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+.breadcrumb-item.active {
+  color: #6c757d; /* Active item color */
+}
+
+/* Reply Footer for Reactions */
+.reply-footer {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #555; /* Match inline style for consistency */
+  padding-top: 5px;
+  border-top: 1px solid #eee; /* Optional: separator line */
 }

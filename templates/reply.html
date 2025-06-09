@@ -1,4 +1,13 @@
-<div class="reply-card">
-  <div class="reply-info">{{User}} {{Timestamp}}</div>
-  <div class="reply-content">{{Content}}</div>
+<div class="reply">
+  <div class="reply-header">
+    <img src="{{AvatarURL}}" alt="User Avatar" class="reply-avatar" />
+    <span class="reply-user">{{UserName}}</span>
+    <span class="reply-timestamp">{{Timestamp}}</span>
+  </div>
+  <div class="reply-content">
+    {{Content}}
+  </div>
+  <div class="reply-footer" style="margin-top: 10px; font-size: 0.9em; color: #555;">
+    <span>{{ReactionCount}}</span>
+  </div>
 </div>
