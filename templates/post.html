@@ -4,20 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{Post Title}}</title>
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="../../css/style.css" rel="stylesheet" /> <!-- Path relative to post.html -->
     <link rel="stylesheet" href="https://fonts.xz.style/serve/inter.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
   </head>
   <body>
     <header>
-      <div><a href="{{Forum Link}}">return to {{Forum Title}}</a></div>
-      <div class="main-content">
+      <!-- The "return to forum" link can remain if desired, or be removed if breadcrumbs are sufficient -->
+      <a href="{{Forum Link}}">Return to {{Forum Title}}</a>
+    </header>
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{GuildLinkBreadcrumb}}">{{GuildName}}</a></li>
+          <li class="breadcrumb-item"><a href="{{ForumLinkBreadcrumb}}">{{Forum Title}}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{Post Title}}</li>
+        </ol>
+      </nav>
+      <div class="post-header">
         <h1>{{Post Title}}</h1>
       </div>
-    </header>
-    <div class="replies">{{Replies}}</div>
+      <div class="replies-container">
+        {{Replies}}
+      </div>
+    </div>
   </body>
 </html>

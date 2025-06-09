@@ -1,6 +1,7 @@
 import discord
 from dotenv import load_dotenv
 import os
+import shutil
 from pathlib import Path
 
 from parseguild import (
@@ -49,6 +50,11 @@ async def on_ready():
     post_list_item_text = open_template(template_path.joinpath("post-list-item.html"))
     for guild in client.guilds:
         guild_dir = create_guild_directory(guild, write_path)
+        # Create css directory and copy style.css
+        css_dir = guild_dir.joinpath("css")
+        css_dir.mkdir(exist_ok=True)
+        # Assuming style.css is directly in template_path
+        shutil.copyfile(template_path.joinpath("style.css"), css_dir.joinpath("style.css"))
         forum_list_items = []
         for forum in guild.forums:
             forum_list_items.append(
